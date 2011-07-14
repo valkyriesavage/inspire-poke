@@ -8,17 +8,17 @@ OPTIONS_MARC = '&rg=3&of=t'
 OPTIONS_ID = '&of=id'
 
 TAG_TO_MARC_FIELD = {
-    'author' : ' 700__ $$a',
+    'author'      : ' 700__ $$a',
     'firstauthor' : ' 100__ $$a',
-    'title' : ' 245__ $$a',
-    'recid' : ' 001__ ',
-    'date' : ' ???__ $$q',
-    'abstract' : ' 520__ $$9arXiv$$a',
+    'title'       : ' 245__ $$a',
+    'recid'       : ' 001__ ',
+    'date'        : ' 269__ $$c',
+    'abstract'    : ' 520__ $$9arXiv$$a',
 }
 
 def tag_value(tag, line):
     """ return the value of a given tag in a given line """
-    return line.split(TAG_TO_MARC_FIELD[tag])[1].split('$$')[0]strip()
+    return line.split(TAG_TO_MARC_FIELD[tag])[1].split('$$')[0].strip()
 
 def in_line(tag, line):
     """ take a tag and a line and return true if the tag
@@ -35,16 +35,18 @@ def decode(raw_marc_text):
             recid (for links)
     """
     results = []
-    for line in raw_marc_text:
+    record = {}
+    for line in raw_marc_text.split('\n'):
         if in_line('recid', line):
-            if results and record:
+            if record:
                 results.append(record)
-            else:
-                record = {'recid' : tag_value('recid', line)}
+            record = {'recid' : tag_value('recid', line)}
         for tag in ['title', 'firstauthor', 'abstract', 'date']:
             if in_line(tag, line):
                 record[tag] = tag_value(tag, line)
                 break
+    results.append(record)
+    return results
 
 def get_inspire_results(query):
     """ take a query in the SPIRES style and return INSPIRE's first three
