@@ -1,0 +1,5 @@
+inspire poke is a super basic repo.
+
+all it has is a tiny server which can run on the SPIRES backend and which queries the inspire
+server for the results it got.  there's also a simple js file which displays info from this
+tiny server in order to convince the user to use INSPIRE.  ;)
