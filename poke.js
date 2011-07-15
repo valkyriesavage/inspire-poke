@@ -77,33 +77,49 @@ function notify() {
     yesNo = document.getElementById('yesNo').children[0].checked;
     why = document.getElementById('whyBox').value;
 
+    $.getJSON('https://inspire.slac.stanford.edu/cgi-bin/feedback.py?yesNo='+yesNo+'&message='+why,
+              {},
+              null);
+
     feedbackForm = document.getElementById('feedbackForm');
     feedbackForm.innerHTML = 'Thanks!'
 }
 
 function populate_results(data, textStatus, jqXHR) {
     // data is a dictionary containing results (a list) and num_results (an integer)
-    showOff = document.createElement('div');
-    showOff.setAttribute('class', 'inspireresults');
-    showOff.setAttribute('id', 'inspireresults');
-    showOff.innerHTML = 'INSPIRE got ' + data.num_results + ' hits for the same query!';
-    nudgeBox.appendChild(showOff);
+    showOff = $('<div></div>');
+    showOff.addClass('inspireresults');
+    showOff.attr('id', 'inspireresults');
+    showOff.text('INSPIRE got ' + data.num_results + ' hits for the same query!');
 
-    showOff.innerHTML += '<table>'
+    list = $('<ol></ol>');
     for (i=0; i<data.results.length; i++) {
         result = data.results[i];
-        showOff.innerHTML += '<tr><td><a href="http://inspirebeta.net/record/' + result.recid + '>' +
-                             i + ') ' + result.title + '. ' + result.author + '</a></td></tr>';
+        result.title = result.title.replace(/>/g, '&gt');
+        result.title = result.title.replace(/</g, '&lt');
+        item = $('<li></li>');
+        link = $('<a href="http://inspirebeta.net/record/' + result.recid + '">' + result.title + '. ' +
+                result.firstauthor + '</a>');
+        link.appendTo(item);
+        item.appendTo(list);
     }
-    showOff.innerHTML += '</table>'
+    list.appendTo(showOff);
+
+    showOff.appendTo($('div#inspireNudge'));
+
+    feedbackForm = $('div#feedbackForm');
+    feedbackForm.before(showOff);
 }
 
 function get_query() {
-    return document.getElementsByName('rawcmd')[0].value;
+    stuff = window.location.search;
+    search = stuff.split('rawcmd=')[1].split('&')[0];
+
+    return search;
 }
 
 function get_inspire_results() {
-    $.getJSON('http://whereveritis/queryinspire.py?query='+get_query(),
+    $.getJSON('https://inspire.slac.stanford.edu/cgi-bin/queryinspire.py?query='+get_query(),
               {},
               populate_results);
 }

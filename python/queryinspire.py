@@ -1,3 +1,5 @@
+#!/usr/bin/env python26
+
 import cgi
 import json
 from urllib import quote
