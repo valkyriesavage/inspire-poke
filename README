@@ -3,3 +3,6 @@ inspire poke is a super basic repo.
 all it has is a tiny server which can run on the SPIRES backend and which queries the inspire
 server for the results it got.  there's also a simple js file which displays info from this
 tiny server in order to convince the user to use INSPIRE.  ;)
+
+to use it, just include the js and css files on an HTML document which has a div whose id
+is "inspireNudge".  that div will be populated with INSPIRE's data.
