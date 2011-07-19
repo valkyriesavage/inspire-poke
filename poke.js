@@ -97,12 +97,17 @@ function populate_results(data, textStatus, jqXHR) {
         result = data.results[i];
         result.title = result.title.replace(/>/g, '&gt');
         result.title = result.title.replace(/</g, '&lt');
+        if (result.title.length > 30) {
+            result.title = result.title.substr(0, 30);
+        }
         item = $('<li></li>');
         link = $('<a href="http://inspirebeta.net/record/' + result.recid + '">' + result.title + '. ' +
                 result.firstauthor + '</a>');
         link.appendTo(item);
         item.appendTo(list);
     }
+    item = $('<li>...</li>');
+    item.appendTo(list);
     list.appendTo(showOff);
 
     showOff.appendTo($('div#inspireNudge'));
