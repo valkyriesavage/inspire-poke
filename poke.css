@@ -1,0 +1,9 @@
+#inspireNudge {
+    background-color: #FC9;
+    color: #666;
+}
+
+#inspireNudge a, a:hover, a:visited, {
+    color: #69C;
+    text-decoration: none;
+}
